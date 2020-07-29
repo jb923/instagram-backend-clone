@@ -19,6 +19,7 @@ sqlalchemy = "*"
 flask-cors = "*"
 jwt = "*"
 boto3 = "*"
+awscli = "*"
 
 [requires]
 python_version = "3.8"

@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 import os
 
-from app.routes import api
+from app.routes import api, aws
 from app.models.models import db
 from app.config import Configuration
 
@@ -20,6 +20,7 @@ db.init_app(app)
 Migrate(app, db)
 
 app.register_blueprint(api.bp)
+app.register_blueprint(aws.bp)
 
 # @app.route('/', defaults={'path': ''})
 # @app.route('/<path:path>')
