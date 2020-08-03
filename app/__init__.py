@@ -4,7 +4,7 @@ from flask_cors import CORS
 import os
 
 from app.routes import api, aws
-from app.models.models import db
+from app.models import db
 from app.config import Configuration
 
 # if os.environ.get("FLASK_ENV") == 'production':

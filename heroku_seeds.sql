@@ -3,12 +3,12 @@ DELETE FROM likes;
 DELETE FROM posts;
 DELETE FROM comments;
 
-INSERT INTO users (full_name, username, email, hashed_password, profileimgurl, bio)
+INSERT INTO users (name, username, email, profile_pic_url, bio, hashed_password,)
 VALUES
-    ('demo user', 'demouser', 'demouser@demouser.com', 'pbkdf2:sha256:150000$Kae4NpQC$0f5d41ceda81c71f16e5c4f7c5651b12e3bb9aa631ff9c2c9a979a6781b7fe7f', 'https://i.etsystatic.com/7745761/r/il/eb07f8/1384972180/il_570xN.1384972180_mly2.jpg', 'I am demo');
+    ('demo user', 'demouser', 'demouser@demouser.com', 'https://i.etsystatic.com/7745761/r/il/eb07f8/1384972180/il_570xN.1384972180_mly2.jpg', 'I am demo', 'pbkdf2:sha256:150000$JywjGg86$c0185e326734cfe06b5202753432121514673e62541029006de4bb1fb3db7704'),
+    ('ceejay', 'ceejayduhh', 'ceejayduhh@ceejayduhh.com', 'https://appacademy-instagram-clone.s3-us-west-1.amazonaws.com/IMG_2837.JPG', 'It''s ceejay duhh', 'pbkdf2:sha256:150000$hqGtHVmM$1a7905391162a5eaebcf6b0a917c0b8f43826073a24d84d02651799b94813532');
 
-
-INSERT INTO posts (user_id, imgurl, description)
+INSERT INTO posts (user_id, post_imgurl, description)
 VALUES
     (1, 'https://appacademy-instagram-clone.s3-us-west-1.amazonaws.com/IMG_2210.JPG', 'Disneyland!')
     (1, 'https://appacademy-instagram-clone.s3-us-west-1.amazonaws.com/IMG_3468.JPG', 'LV Rug')
@@ -16,13 +16,7 @@ VALUES
     (1, 'https://appacademy-instagram-clone.s3-us-west-1.amazonaws.com/IMG_3474.JPG', 'My team stays clean in SUPREME')
 
 
-INSERT INTO comments (user_id, post_id, content)
-VALUES 
-    (1, 1, 'Amazing!')
-    (1, 2, 'I need this!')
-    (1, 3, 'Pumpkins!')
-    (1, 4, 'Drippppp')
-
-INSERT INTO likes (user_id, liked)
+INSERT INTO follows (user_id, follow_user_id)
 VALUES
-    (1, True)
+    (1, 2)
+    (2, 1)
