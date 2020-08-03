@@ -123,6 +123,58 @@ def get_user_post(userId):
         return jsonify({"error": str(message)}), 400
 
 
+@bp.route("/<int:userId>")
+def get_home_feed(userId):
+    postList = []
+
+    follows = Follow.query.filter(Follow.user_id == userId).all()
+    for follow in follows:
+        posts = Post.query.filter((Post.user_id == follow.follow_user_id) | (Post.user_id == userId)).all()
+
+        active_users = {}
+        for post in posts:
+            post_dict = post.to_dict()
+            if post.user_id in active_users:
+                post_dict["user_info"] = active_users[post.user_id]
+            else:
+                user = post.user
+                active_users[post.user_id] = {"username": user.username, "profileimgurl": user.profileimgurl}
+                post_dict["user_info"] = active_users[post.user_id]
+
+            likes = Like.query.filter(Like.post_id == post.id).all()
+            post_dict["LikesNum"] = len(likes)
+            likesList = []
+            for like in likes:
+                likesList.append(like.user.to_dict())
+            post_dict["likesList"] = likesList
+
+            comments = post.comment
+            commentsList = []
+            for comment in comments:
+                comment_dict = comment.to_dict()
+                comment_likes = Like.query.filter(Like.comment_id == comment.id).all()
+                userList = []
+                for like in comment_likes:
+                    username = like.user.to_dict()
+                    userList.append(username)
+
+                comment_dict["commentLikes"] = userList
+
+                if comment.user_id in active_users:
+                    comment_dict["username"] = active_users[comment.user_id]
+                else:
+                    user = comment.user
+                    active_users[user.id] = {"username": user.username, "profileimgurl": user.profileimgurl}
+                    comment_dict["username"] = active_users[comment.user_id]
+
+                commentsList.append(comment_dict)
+                
+            post_dict["comments"] = {"commentsList": commentsList}
+
+            postList.append(post_dict)
+    return {"postList": postList}
+
+
 
 @bp.route("/comments", methods=["POST"])
 def create_comment():
@@ -138,11 +190,11 @@ def create_comment():
 
 
 @bp.route("/comment/<int:postId>")
-def get_comment(postId)
+def get_comment(postId):
     try:
         fetched_comments = Comment.query.filter(Comment.post_id == postId).all()
         comments = [comment.to_dict() for comment in fetched_comments]
-        return jsonify("comments": comments)
+        return jsonify({"comments": comments})
     except AssertionError as message:
         print(str(message))
         return jsonify({"error": str(message)}), 400
