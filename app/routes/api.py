@@ -90,3 +90,123 @@ def get_profile_info(userId):
         post_dict["numComments"] = commentsNum
         postList.append(post_dict)
     return {"postsNum": post_count, "posts": postList, "followersList": followersList, "followersNum": followersNum, "followingList": followingList, "followingNum": followingNum, "user": user.to_dict()}
+
+
+@bp.route("/posts", methods=["POST"])
+def create_post():
+    data = request.json
+    try:
+        post = Post(user_id=data["userId"], postimgurl=data["postimgurl"], description=data["description"])
+        db.session.add(post)
+        db.session.commit()
+        return jsonify({"post": "post created"})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+@bp.route("/posts")
+def get_all_posts():
+    posts = Post.query.all()
+    postsList = [post.to_dict() for post in posts]
+    return {"posts": postsList}
+
+
+@bp.route("/posts/<int:userId>")
+def get_user_post(userId):
+    try:
+        fetched_posts = Post.query.filter(Post.user_id == userId).all()
+        posts = [post.to_dict() for post in fetched_posts]
+        return jsonify({"posts": posts})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+
+@bp.route("/comments", methods=["POST"])
+def create_comment():
+    data.request.json
+    try:
+        comment = Comment(user_id=data["userId"], post_id=data["postId"], user_name=data["userName"], content=data["content"])
+        db.session.add(comment)
+        db.session.commit()
+        return jsonify({"comment": "comment added"})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+@bp.route("/comment/<int:postId>")
+def get_comment(postId)
+    try:
+        fetched_comments = Comment.query.filter(Comment.post_id == postId).all()
+        comments = [comment.to_dict() for comment in fetched_comments]
+        return jsonify("comments": comments)
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+@bp.route("/likes", methods=["POST"])
+def create_like():
+    data = request.json
+    try:
+        like = Like(
+            user_id=data["userId"], post_id=data["postId"], comment_id=data["commentId"])
+        db.session.add(like)
+        db.session.commit()
+        return jsonify({"like": "liked"})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+@bp.route("/likes/<int:postId>")
+def get_post_like(postId):
+    try:
+        fetched_likes = Like.query.filter(Like.post_id == postId).all()
+        likes = [like.to_dict() for like in fetched_likes]
+        return jsonify({"postLikes": likes})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+@bp.route("/likes/<int:commentId>")
+def get_comment_like(commentId):
+    try:
+        fetched_likes = Like.query.filter(Like.comment_id == commentId).all()
+        likes = [like.to_dict() for like in fetched_likes]
+        return jsonify({"commentLikes": likes})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+@bp.route("/follows", methods=["POST"])
+def create_follow():
+    data = request.json
+    check_following = Follow.query.filter(Follow.user_id == data['userId']).filter(Follow.follow_user_id == data['followUserId']).first()
+    if check_following:
+        return {"error": "Already following"}, 400
+    try:
+        follow = Follow(user_id=data["userId"],
+                        follow_user_id=data["followUserId"])
+        db.session.add(follow)
+        db.session.commit()
+        return jsonify({"follow": "following"})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
+@bp.route("/follows/<int:userId>")
+def get_follow(userId):
+    try:
+        fetched_follows = Follow.query.filter(Follow.user_id == userId).all()
+        follows = [follow.to_dict() for follow in fetched_follows]
+        return jsonify({"follows": follows})
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
