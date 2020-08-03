@@ -89,7 +89,7 @@ def get_profile_info(userId):
         post_dict["numLikes"] = likesNum
         post_dict["numComments"] = commentsNum
         postList.append(post_dict)
-    return {"postsNum": post_count, "posts": postList, "followersList": followersList, "followersNum": followersNum, "followingList": followingList, "followingNum": followingNum, "user": user.to_dict()}
+    return {"postsNum": posts_count, "posts": postList, "followersList": followersList, "followersNum": followersNum, "followingList": followingList, "followingNum": followingNum, "user": user.to_dict()}
 
 
 @bp.route("/posts", methods=["POST"])
