@@ -52,8 +52,7 @@ def signin_user():
     if not user:
         return {"error": "Email not found"}, 422
     if user.check_password(data['password']):
-        access_token = jwt.encode(
-            {'email': user.email}, Configuration.SECRET_KEY)
+        access_token = jwt.encode({'email': user.email}, Configuration.SECRET_KEY)
         return {'access_token': access_token.decode('UTF-8'), 'user': user.to_dict()}
     else:
         return {"error": "Incorrect password"}, 401
@@ -123,7 +122,7 @@ def get_user_post(userId):
         return jsonify({"error": str(message)}), 400
 
 
-@bp.route("/<int:userId>")
+@bp.route("/home/<int:userId>")
 def get_home_feed(userId):
     postList = []
 
@@ -138,7 +137,7 @@ def get_home_feed(userId):
                 post_dict["user_info"] = active_users[post.user_id]
             else:
                 user = post.user
-                active_users[post.user_id] = {"username": user.username, "profileimgurl": user.profileimgurl}
+                active_users[post.user_id] = {"username": user.username, "profileimgurl": user.profile_imgurl}
                 post_dict["user_info"] = active_users[post.user_id]
 
             likes = Like.query.filter(Like.post_id == post.id).all()
