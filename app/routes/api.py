@@ -163,7 +163,7 @@ def get_home_feed(userId):
                     comment_dict["username"] = active_users[comment.user_id]
                 else:
                     user = comment.user
-                    active_users[user.id] = {"username": user.username, "profileimgurl": user.profileimgurl}
+                    active_users[user.id] = {"username": user.username, "profileimgurl": user.profile_imgurl}
                     comment_dict["username"] = active_users[comment.user_id]
 
                 commentsList.append(comment_dict)
@@ -174,10 +174,9 @@ def get_home_feed(userId):
     return {"postList": postList}
 
 
-
 @bp.route("/comments", methods=["POST"])
 def create_comment():
-    data.request.json
+    data = request.json
     try:
         comment = Comment(user_id=data["userId"], post_id=data["postId"], user_name=data["userName"], content=data["content"])
         db.session.add(comment)
@@ -188,7 +187,7 @@ def create_comment():
         return jsonify({"error": str(message)}), 400
 
 
-@bp.route("/comment/<int:postId>")
+@bp.route("/comments/<int:postId>")
 def get_comment(postId):
     try:
         fetched_comments = Comment.query.filter(Comment.post_id == postId).all()
