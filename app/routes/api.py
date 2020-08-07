@@ -95,7 +95,7 @@ def get_profile_info(userId):
 def create_post():
     data = request.json
     try:
-        post = Post(user_id=data["userId"], postimgurl=data["postimgurl"], description=data["description"])
+        post = Post(user_id=data["userId"], post_imgurl=data["postimgurl"], description=data["description"])
         db.session.add(post)
         db.session.commit()
         return jsonify({"post": "post created"})
@@ -198,8 +198,8 @@ def get_comment(postId):
         return jsonify({"error": str(message)}), 400
 
 
-@bp.route("/likes", methods=["POST"])
-def create_like():
+@bp.route("/likes/<int:userId>", methods=["POST"])
+def create_like(userId):
     data = request.json
     try:
         like = Like(
