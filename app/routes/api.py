@@ -198,12 +198,12 @@ def get_comment(postId):
         return jsonify({"error": str(message)}), 400
 
 
-@bp.route("/likes/<int:userId>", methods=["POST"])
+@bp.route("/like/<int:userId>", methods=["POST"])
 def create_like(userId):
     data = request.json
     try:
         like = Like(
-            user_id=data["userId"], post_id=data["postId"], comment_id=data["commentId"])
+            user_id=userId, post_id=data["postId"], comment_id=data["commentId"])
         db.session.add(like)
         db.session.commit()
         return jsonify({"like": "liked"})
