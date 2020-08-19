@@ -27,11 +27,7 @@ def signup_user():
         return {"error": "Please provide a username"}, 400
     if not data["password"]:
         return {"error": "Please provide a password"}, 400
-    if not data["confirmPassword"]:
-        return {"error": "Please confirm your password"}, 400
-    if data["password"] != data["confirmPassword"]:
-        return {"error": "Passwords do not match"}, 400
-    user = User(name=data["name"], username=data["username"], email=data['email'], password=data['password'], profile_imgurl="", bio=data["bio"])
+    user = User(name=data["name"], username=data["username"], email=data['email'], password=data['password'], profile_imgurl="https://appacademy-instagram-clone.s3-us-west-1.amazonaws.com/favicon.ico")
     db.session.add(user)
     db.session.commit()
     access_token = jwt.encode({'email': user.email}, Configuration.SECRET_KEY)
@@ -43,7 +39,7 @@ def get_user_name(userId):
     user = User.query.filter(User.id == int(userId)).first()
     user_name = user.name
     return {"userName": user_name}
-    
+
 
 @bp.route("/users/session", methods=['POST'])
 def signin_user():
@@ -52,13 +48,14 @@ def signin_user():
     if not user:
         return {"error": "Email not found"}, 422
     if user.check_password(data['password']):
-        access_token = jwt.encode({'email': user.email}, Configuration.SECRET_KEY)
+        access_token = jwt.encode(
+            {'email': user.email}, Configuration.SECRET_KEY)
         return {'access_token': access_token.decode('UTF-8'), 'user': user.to_dict()}
     else:
         return {"error": "Incorrect password"}, 401
 
 
-@bp.route('/profileinfo/<userId>')
+@bp.route('/profileinfo/<int:userId>')
 def get_profile_info(userId):
     user = User.query.filter(User.id == userId).first()
     posts = Post.query.filter(Post.user_id == userId).all()
