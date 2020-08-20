@@ -1,2 +1,2 @@
-FLASK_APP=flexagram_app.py
-FLASK_ENV=devlopment
+FLEXAGRAM_APP=flexagram_app.py
+FLEXAGRAM_ENV=production
