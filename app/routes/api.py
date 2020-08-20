@@ -122,10 +122,10 @@ def get_user_post(userId):
 @bp.route("/home/<int:userId>")
 def get_home_feed(userId):
     postList = []
-
+    # posts = Post.query.filter((Post.user_id == follow.follow_user_id) | (Post.user_id == userId)).all()
     follows = Follow.query.filter(Follow.user_id == userId).all()
     for follow in follows:
-        posts = Post.query.filter((Post.user_id == follow.follow_user_id) | (Post.user_id == userId)).all()
+        posts = Post.query.filter(Post.user_id == follow.follow_user_id).all()
 
         active_users = {}
         for post in posts:
@@ -140,9 +140,15 @@ def get_home_feed(userId):
             likes = Like.query.filter(Like.post_id == post.id).all()
             post_dict["LikesNum"] = len(likes)
             likesList = []
+            check_user_liked = False
             for like in likes:
+                if like.user_id == userId:
+                    check_user_liked = True
+                else:
+                    check_user_liked = False
                 likesList.append(like.user.to_dict())
             post_dict["likesList"] = likesList
+            post_dict['check_user_liked'] = check_user_liked
 
             comments = post.comment
             commentsList = []

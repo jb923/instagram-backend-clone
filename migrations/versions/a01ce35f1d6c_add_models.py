@@ -1,8 +1,8 @@
-"""flexagram models
+"""add models
 
-Revision ID: 2e41f6edbae6
+Revision ID: a01ce35f1d6c
 Revises: 
-Create Date: 2020-08-03 00:41:17.658686
+Create Date: 2020-08-19 14:42:59.655801
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2e41f6edbae6'
+revision = 'a01ce35f1d6c'
 down_revision = None
 branch_labels = None
 depends_on = None
